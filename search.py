@@ -1,9 +1,17 @@
 import re
 STOP_WORDS = {"the", "a", "an", "and", "on", "in", "of", "to", "is", "it"}
+
+def stem(word):
+    for suffix in ("ing", "ed", "es", "s"):
+                if word.endswith(suffix) and len(word) - len(suffix) >= 3:
+                              return word[:-len(suffix)]
+    return word
+       
 def tokenize(text):
     text = text.lower()
     words = re.findall(r"[a-z0-9]+", text)
     words = [w for w in words if w not in STOP_WORDS]
+    words = [stem (w) for w in words]
     return words
 
 def build_index(docs):
@@ -33,6 +41,6 @@ docs = {
 }
 
 index = build_index(docs)
-print(tokenize ("The cat sat on the mat"))
-print(search(index, "the"))
-print(index.keys())
+print(stem("cats"), stem("walking"), stem("walked"), stem("bus"), stem("glasses"))
+print(search(index, "cat"))
+print(search(index, "dog"))
